@@ -12,7 +12,6 @@
 short th0 = 0;
 short tl0 = 0;
 volatile bit was_1ms = 0;
-volatile unsigned char count_4ms = 0;
 
 void startTimer0(short padding) {
 	short t0;
@@ -33,24 +32,26 @@ void startInterrupts(void) {
 	EA = 1;
 }
 
-
 void timer0int (void) __interrupt(TF0_VECTOR) {
 	was_1ms = 1;
 	TH0 |= th0;
 	TL0 |= tl0;
 }
 
-volatile unsigned char counters[6] = {0,0,0,0,0,0};
-volatile unsigned char flags[6] = {0,0,0,0,0,0};
-volatile unsigned char maxes[6] = {4,250,60,60,100,1};
+#define COUNTERS 5
+// liczniki:
+volatile unsigned char counters[COUNTERS] = {0,0,0,0,0};
+// wartosci przepelnienia dla odpowiednich licznikow:
+volatile unsigned char maxes[COUNTERS] = {4,250,60,60,100};
+// flagi przepelnienia dla licznikow:
+volatile unsigned char flags[COUNTERS] = {0,0,0,0,0};
 
 void checkEvents() {
-	unsigned char i;
-	unsigned char tmp;
+	unsigned char i, tmp;
 	if(was_1ms) {
-		for(i = 0; i < 6; ++i) flags[i] = 0;
+		//for(i = 0; i < COUNTERS; ++i) flags[i] = 0;
 		was_1ms = 0;
-		for(i = 0; i < 6; ++i) {
+		for(i = 0; i < COUNTERS; ++i) {
 			tmp = counters[i];
 			++tmp;
 			if(tmp == maxes[i]) {
@@ -62,14 +63,17 @@ void checkEvents() {
 				break;
 			}
 		}
+		// czyszczenie nastepnych elementow
+		for(++i; i < COUNTERS; ++i) flags[i] = 0;
 	}
 }
 
-unsigned char seg_num = 0;
-
+// adresy buforu wyboru wyswietlacza
 __xdata unsigned char * __data csds = 0xff30;
+//    i buforu wartosci wyswietlacza
 __xdata unsigned char * __data csdb = 0xff38;
 
+// kody kolejnych liczb
 unsigned char bcodes[10] = {
   0x3f, //0
   0x06, //1
@@ -83,17 +87,12 @@ unsigned char bcodes[10] = {
   0x6f  //9
 };
 
+// poczatkowy stan bufora wyswietlacza
 unsigned char disBuff[6] = 
-{0x3f, 0x3f, 0x3f, 0x3f, 0x3f, 0x3f};
+	{0x3f, 0x3f, 0x3f, 0x3f, 0x3f, 0x3f};
 
-bit setNum(unsigned char block, unsigned char num) {
-	unsigned char digit1, digit2;
-	digit1 = num % 10;
-	digit2 = num / 10;
-	disBuff[block] = bcodes[digit1];
-	disBuff[block+1] = bcodes[digit2];
-	return 1;
-}
+// aktywny wyswieltacz
+unsigned char seg_num = 0;
 
 void rotateDisplay(void) {
 	P1_6 = 1;
@@ -106,20 +105,15 @@ void rotateDisplay(void) {
 	P1_6 = 0;
 }
 
+void setNum(unsigned char block, unsigned char num) {
+	disBuff[block] = bcodes[num % 10];
+	disBuff[block+1] = bcodes[num / 10];
+}
 
 void main(void) {
 	startInterrupts();
 	startTimer0(922);
 	while(1) {
-		/*if(check_4ms()) rotateDisplay();
-		if(check_1s()) { 
-			P1_7 = !P1_7;
-			setNum(0, count_60s);
-		}
-		if(check_1m()) setNum(2, count_60m);
-		if(check_1h()) setNum(4, count_99h);
-		check_99h();*/
-
 		checkEvents();
 		if(flags[0]) rotateDisplay();
 		if(flags[1]) {
