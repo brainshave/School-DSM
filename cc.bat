@@ -1,2 +1,2 @@
-sdcc display.c
-packihx display.ihx > display.hex
+sdcc transmit.c
+packihx transmit.ihx > transmit.hex
