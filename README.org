@@ -1,0 +1,24 @@
+* Significant C programs for DSM:
+
+** transmit.c
+  Last program from sixth semester. Displays digital clock on led display
+  of DSM-51.
+  
+  Replies with my 'business card' when receives 's' on RS-232. If I remember
+  correctly, any other character is echoed.
+  
+** Compilation
+   Compile *.c files with sdcc http://sdcc.sf.net
+
+* Borland C++ programs:
+
+** SmplRecv:
+   Command line program for testing communication (only receiving)
+   
+   Written in bad style.
+
+** GrapTerm:
+   Graphical terminal with full duplex communication (something brakes sometimes
+   and nasty bush comes up in view).
+   
+   Written in a wretched style.
