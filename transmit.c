@@ -76,6 +76,7 @@ void serial_int (void) __interrupt(4) {
 		RI = 0;
 		recvChar = SBUF;
 		//SBUF = recvChar;
+		send = 0;
 		received = 1;
 	}
 }
