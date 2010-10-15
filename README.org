@@ -1,5 +1,12 @@
 * Significant C programs for DSM:
 
+** sam-com.c
+   Plain RS-232 support
+
+** skrz.c
+   Simple program for crossing lights module (compile and send it to dsm with
+   cc-skrz.bat)
+
 ** transmit.c
   Last program from sixth semester. Displays digital clock on led display
   of DSM-51.
