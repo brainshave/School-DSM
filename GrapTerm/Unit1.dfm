@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 267
-  Top = 124
-  Width = 696
-  Height = 480
+  Left = 302
+  Top = 114
+  Width = 745
+  Height = 573
   Caption = 'Form1'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,13 +11,14 @@ object Form1: TForm1
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnKeyDown = Memo1KeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object Memo1: TMemo
-    Left = 8
-    Top = 40
-    Width = 369
-    Height = 321
+    Left = 88
+    Top = 8
+    Width = 417
+    Height = 89
     Lines.Strings = (
       'Alasdf')
     TabOrder = 0

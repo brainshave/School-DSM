@@ -24,6 +24,7 @@ protected:
         void __fastcall Execute();
 public:
         __fastcall RecvThread(bool CreateSuspended, TStrings * strs, HANDLE * dev);
+        volatile char toSend;
 
 };
 //---------------------------------------------------------------------------

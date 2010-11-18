@@ -4,6 +4,9 @@
 #pragma hdrstop
 HANDLE hCommDev;
 DCB dcb;
+
+COMMTIMEOUTS timeouts = { 20, 50, 100, 20, 50 }; 
+
 #define BUFF_SIZE 128
 char buffer[BUFF_SIZE];
 
@@ -54,6 +57,8 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 		Button1->Caption = "Roz³¹cz" ;
 		COMnected = true;
 
+                SetCommTimeouts(hCommDev, &timeouts);
+
         	Memo1->Lines->Add("Po³¹czono");
                 recvTh = new RecvThread(false, Memo1->Lines, &hCommDev);
         } else {
@@ -72,9 +77,12 @@ void __fastcall TForm1::Memo1KeyDown(TObject *Sender, WORD &Key,
 {
         static int diff = 'A' - 'a'; 
         static char * sendbuff = " ";
-        sendbuff[0] = Key - diff;
-        unsigned long sentBytes = 0;
-        WriteFile(hCommDev, sendbuff, 1, &sentBytes, 0);
+        //sendbuff[0] = Key - diff;
+        //sendbuff[0] = Key - diff;
+        //WriteFile(hCommDev, sendbuff, 1, &sentBytes, 0);
+
+        recvTh->toSend = (char) Key - diff;
+
 }
 //---------------------------------------------------------------------------
 

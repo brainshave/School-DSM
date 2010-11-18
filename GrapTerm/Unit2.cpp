@@ -21,7 +21,7 @@
 //---------------------------------------------------------------------------
 
 __fastcall RecvThread::RecvThread(bool CreateSuspended, TStrings * strs, HANDLE * dev)
-        : TThread(CreateSuspended), strings(strs), device(dev)
+        : TThread(CreateSuspended), strings(strs), device(dev),toSend(0)
 {
 strings->Add("Tworze watek odbierajacy");
 Priority = tpNormal;
@@ -52,17 +52,22 @@ void __fastcall RecvThread::Execute()
         unsigned long bReceived = 0;
         //---- Place thread code here ----
         while (1) {
+            if(toSend) {
+                TransmitCommChar(*device, toSend);
+                toSend = 0;
+            }
             ReadFile(*device, &buffer, 1, &bReceived, NULL);
-            char b = buffer[0];
-            if (b == '\n') {
-                strings->Add("");
-            } else {
-                int last = strings->Count -1;
-                AnsiString lastStr = (*strings)[last] + b;
-                strings->Delete(last);
-                strings->Add(lastStr);
+            if(bReceived) {
+                char b = buffer[0];
+                if (b == '\n') {
+                    strings->Add("");
+                } else {
+                    int last = strings->Count -1;
+                    AnsiString lastStr = (*strings)[last] + b;
+                    strings->Delete(last);
+                    strings->Add(lastStr);
+                }
             }
         }
 }
 //---------------------------------------------------------------------------
- 
