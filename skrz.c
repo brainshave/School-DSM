@@ -117,6 +117,7 @@ char* bcardptr = bcard;
 
 void main(void) {
   bit run = 1;
+  bit car = 1;
   char a = 0;
   startInterrupts();
   startSerial();
@@ -130,8 +131,12 @@ void main(void) {
 	bcardptr = bcard;
 	send = 1;
       } else {
-	CS55A = recvChar;
-	CS55B = recvChar;
+        if (car) {
+       	  CS55A = recvChar;
+       	} else {
+          CS55B = recvChar;
+        }
+        car = 1 - car;
 	SBUF = recvChar;
       }
     }

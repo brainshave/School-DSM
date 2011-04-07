@@ -4,7 +4,13 @@
 #define Unit2H
 //---------------------------------------------------------------------------
 #include <Classes.hpp>
+#include "Unit3.h"
+//class Light;
 //---------------------------------------------------------------------------
+
+
+
+
 class RecvThread : public TThread
 {
   typedef struct tagTHREADNAME_INFO
@@ -22,7 +28,16 @@ private:
 protected:
 
         void __fastcall Execute();
-public:
+public:           
+  unsigned short state;
+  Light * horizCar;
+  Light * vertCar;
+  Light * horizPed;
+  Light * vertPed;
+  bool vertPedWanna;
+  bool horizPedWanna;
+  const short malfunction_state;
+  bool malfunction; 
         __fastcall RecvThread(bool CreateSuspended, TStrings * strs, HANDLE * dev);
         volatile char toSend;
 
